@@ -1,8 +1,9 @@
-# Name: Abdul Raffay Qasim
-# Name: Team Member
-# Date: 2026-04-23
-# Minor improvement after PR review
-# Added after review feedback
+# ============================================================
+# config.py
+# Author: Menahil Fatima
+# Date: 2026-04-24
+# Description: Application configuration settings
+# ============================================================
 import os
 
 class Config:
@@ -10,6 +11,7 @@ class Config:
     Handles database connection strings and system timeouts.
     """
     MYSQL_HOST = os.environ.get('MYSQL_HOST', 'sakila-db-server')
+    CONNECTION_TIMEOUT = int(os.environ.get('CONNECTION_TIMEOUT', '30'))
     MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
     MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'admin')
     MYSQL_DB = os.environ.get('MYSQL_DB', 'sakila')
