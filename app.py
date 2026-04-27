@@ -156,7 +156,8 @@ def films():
             params = []
 
             if search:
-                where_conditions.append("(f.title LIKE %s OR f.description LIKE %s)")
+                where_conditions.append(
+                    "(f.title LIKE %s OR f.description LIKE %s)")
                 params.extend([f"%{search}%", f"%{search}%"])
 
             if category:
@@ -396,7 +397,8 @@ def edit_film(film_id):
                 )
 
                 # Update film-category relationship
-                cur.execute("DELETE FROM film_category WHERE film_id = %s", (film_id,))
+                cur.execute(
+                    "DELETE FROM film_category WHERE film_id = %s", (film_id,))
                 if category_id:
                     cur.execute(
                         "INSERT INTO film_category (film_id, category_id) VALUES (%s, %s)",
@@ -404,7 +406,8 @@ def edit_film(film_id):
                     )
 
                 # Update film-actor relationships
-                cur.execute("DELETE FROM film_actor WHERE film_id = %s", (film_id,))
+                cur.execute(
+                    "DELETE FROM film_actor WHERE film_id = %s", (film_id,))
                 for actor_id in actors:
                     cur.execute(
                         "INSERT INTO film_actor (film_id, actor_id) VALUES (%s, %s)",
@@ -432,7 +435,8 @@ def edit_film(film_id):
 
             # Get current category
             cur.execute(
-                "SELECT category_id FROM film_category WHERE film_id = %s", (film_id,)
+                "SELECT category_id FROM film_category WHERE film_id = %s", (
+                    film_id,)
             )
             category_result = cur.fetchone()
             if category_result:
@@ -498,8 +502,10 @@ def delete_film(film_id):
                 return redirect(url_for("films"))
 
             # Delete film relationships first
-            cur.execute("DELETE FROM film_actor WHERE film_id = %s", (film_id,))
-            cur.execute("DELETE FROM film_category WHERE film_id = %s", (film_id,))
+            cur.execute(
+                "DELETE FROM film_actor WHERE film_id = %s", (film_id,))
+            cur.execute(
+                "DELETE FROM film_category WHERE film_id = %s", (film_id,))
 
             # Delete the film
             cur.execute("DELETE FROM film WHERE film_id = %s", (film_id,))
@@ -657,7 +663,8 @@ def export_films():
         return Response(
             output.getvalue(),
             mimetype="text/csv",
-            headers={"Content-disposition": "attachment; filename=films_export.csv"},
+            headers={
+                "Content-disposition": "attachment; filename=films_export.csv"},
         )
     except Exception as e:
         flash(f"Error exporting films: {str(e)}", "error")
@@ -1111,9 +1118,11 @@ def inventory():
                 params.append(store_filter)
 
             if status_filter == "available":
-                conditions.append("r.rental_id IS NULL OR r.return_date IS NOT NULL")
+                conditions.append(
+                    "r.rental_id IS NULL OR r.return_date IS NOT NULL")
             elif status_filter == "rented":
-                conditions.append("r.rental_id IS NOT NULL AND r.return_date IS NULL")
+                conditions.append(
+                    "r.rental_id IS NOT NULL AND r.return_date IS NULL")
 
             if conditions:
                 query += " WHERE " + " AND ".join(conditions)
@@ -1139,11 +1148,13 @@ def inventory():
             inventory_items = cur.fetchall()
 
             # Get films for filter dropdown
-            cur.execute("SELECT DISTINCT title FROM film ORDER BY title LIMIT 100")
+            cur.execute(
+                "SELECT DISTINCT title FROM film ORDER BY title LIMIT 100")
             films = [film["title"] for film in cur.fetchall()]
 
             # Get stores for filter dropdown
-            cur.execute("SELECT DISTINCT store_id FROM store ORDER BY store_id")
+            cur.execute(
+                "SELECT DISTINCT store_id FROM store ORDER BY store_id")
             stores = [store["store_id"] for store in cur.fetchall()]
 
         conn.close()
